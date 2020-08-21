@@ -22,14 +22,18 @@ namespace Server.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Customer>>> GetCustomers()
         {
-            return await _context.Customers.ToListAsync();
+            return await _context.Customers
+                .Include(c => c.Dependents)
+                .ToListAsync();
         }
 
         // GET: api/Customer/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Customer>> GetCustomer(int id)
         {
-            var customer = await _context.Customers.FindAsync(id);
+            var customer = await _context.Customers
+                .Include(c => c.Dependents)
+                .FirstOrDefaultAsync(c => c.Id == id);
 
             if (customer == null)
             {
@@ -40,8 +44,6 @@ namespace Server.Controllers
         }
 
         // PUT: api/Customer/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPut("{id}")]
         public async Task<IActionResult> PutCustomer(int id, Customer customer)
         {
@@ -51,6 +53,7 @@ namespace Server.Controllers
             }
 
             _context.Entry(customer).State = EntityState.Modified;
+            await UpdateDependents(customer);
 
             try
             {
@@ -72,8 +75,6 @@ namespace Server.Controllers
         }
 
         // POST: api/Customer
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
         public async Task<ActionResult<Customer>> PostCustomer(Customer customer)
         {
@@ -102,6 +103,15 @@ namespace Server.Controllers
         private bool CustomerExists(int id)
         {
             return _context.Customers.Any(e => e.Id == id);
+        }
+
+        private async Task UpdateDependents(Customer customer)
+        {
+            var currentDependents = _context.Dependents.Where(d => d.Customer == customer);
+            _context.Dependents.RemoveRange(currentDependents);
+            await _context.SaveChangesAsync();
+
+            await _context.Dependents.AddRangeAsync(customer.Dependents);
         }
     }
 }

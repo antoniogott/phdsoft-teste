@@ -19,8 +19,17 @@ namespace Server
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<CustomerContext>(opt
-                => opt.UseSqlite("Data Source=customers.db"));
+            services.AddDbContext<CustomerContext>(opt =>
+                opt.UseSqlite("Data Source=customers.db"));
+
+            services.AddCors(options =>
+            {
+                options.AddDefaultPolicy(
+                    builder =>
+                    {
+                        builder.AllowAnyOrigin();
+                    });
+            });
 
             services.AddControllers();
         }
@@ -39,7 +48,9 @@ namespace Server
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseHttpsRedirection();
+            // app.UseHttpsRedirection();
+
+            app.UseCors();
 
             app.UseRouting();
 
