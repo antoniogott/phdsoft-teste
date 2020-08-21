@@ -1,0 +1,76 @@
+.nav_header {
+    font-size: 30px;
+    margin-left: 20px;
+    font-weight: bold;
+}
+
+.toolbar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    background-color: #00a0a0;
+    color: white;
+    font-weight: 600;
+}
+
+.content {
+    display: flex;
+    margin: 70px auto 30px;
+    padding: 0 16px;
+    flex-direction: column;
+    align-items: stretch;
+}
+
+tr button {
+    padding-left: .5rem;
+    padding-right: .5rem;
+}
+
+tr button ~ button {
+    margin-left: 10px;
+}
+
+.btn-primary {
+    color: #fff;
+    background-color: #00a0a0;
+    border-color: #00a0a0;
+}
+
+.btn-primary:hover {
+    color: #fff;
+    background-color: #008080;
+    border-color: #008080;
+}
+
+.btn-primary:not(:disabled):not(.disabled):active {
+    color: #fff;
+    background-color: #006060;
+    border-color: #006060;
+}
+
+.active {
+    color: white;
+    background-color: #55b0b0;
+    font-weight: 500;
+}
+
+.info {
+    display: none;
+    color: black;
+    font-weight: initial;
+    width: 100%;
+    background-color: #eee;
+    padding: 20px 30px;
+}
+
+.active .info {
+    display: block;
+}
+
+.card ~ .card {
+    margin-top: 10px;
+}
