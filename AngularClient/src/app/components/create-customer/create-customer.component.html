@@ -1,1 +1,116 @@
-<p>create-customer works!</p>
+<div class="container">
+
+    <div>
+        <h1>New customer</h1>
+        <form (ngSubmit)="onSubmit()" #customerForm="ngForm">
+
+            <div class="form-group">
+                <label for="name">Name</label>
+                <input type="text" class="form-control" id="name" required
+                       [(ngModel)]="customer.name" name="name" #name="ngModel">
+                <div [hidden]="name.valid || name.pristine" class="alert alert-danger">
+                    Name is required
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="cpf">CPF</label>
+                <input type="text" class="form-control" id="cpf" required [(ngModel)]="customer.cpf"
+                       name="cpf" #cpf="ngModel">
+                <div [hidden]="cpf.valid || cpf.pristine"
+                     class="alert alert-danger">
+                    CPF is required
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="age">Age</label>
+                <input type="number" class="form-control" id="age" required
+                       [(ngModel)]="customer.age" name="age" #age="ngModel">
+                <div [hidden]="age.valid || age.pristine"
+                     class="alert alert-danger">
+                    Age is required
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="text" class="form-control" id="email" required
+                       [(ngModel)]="customer.email" name="email" #email="ngModel">
+                <div [hidden]="email.valid || email.pristine"
+                     class="alert alert-danger">
+                    Email is required
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="phone">Phone</label>
+                <input type="text" class="form-control" id="phone" required
+                       [(ngModel)]="customer.phone" name="phone" #phone="ngModel">
+                <div [hidden]="phone.valid || phone.pristine"
+                     class="alert alert-danger">
+                    Phone is required
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="address">Address</label>
+                <input type="text" class="form-control" id="address" required
+                       [(ngModel)]="customer.address" name="address" #address="ngModel">
+                <div [hidden]="address.valid || address.pristine"
+                     class="alert alert-danger">
+                    Address is required
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <h5>Dependents:</h5>
+
+                <div *ngFor="let dependent of customer.dependents; let i = index;"
+                     class="card flex-row">
+
+                    <div class="card-body d-flex">
+                        <h6 class="card-title">
+                            Name:
+                            <input type="text"
+                                   name="dep{{i}}_name'"
+                                   [(ngModel)]="dependent.name">
+                        </h6>
+                        &nbsp;
+                        <h6>
+                            CPF:
+                            <input type="text"
+                                   name="dep{{i}}_cpf'"
+                                   [(ngModel)]="dependent.cpf">
+                        </h6>
+                        &nbsp;
+                        <h6>
+                            Relationship:
+                            <input type="text"
+                                   name="dep{{i}}_relationship'"
+                                   [(ngModel)]="dependent.relationship">
+                        </h6>
+                        &nbsp;
+                        <h6>
+                            Age:
+                            <input type="number"
+                                   name="dep{{i}}_age'"
+                                   [(ngModel)]="dependent.age">
+                        </h6>
+                    </div>
+
+                    <button type="button" class="btn btn-danger fa fa-trash"
+                            (click)="deleteDependent(dependent)"></button>
+                </div>
+
+                <button type="button" class="btn btn-light mt-3" (click)="addDependent()">
+                    <span class="fa fa-plus"></span> Add dependent
+                </button>
+            </div>
+
+            <button type="submit" class="btn btn-primary"
+                    [disabled]="!customerForm.form.valid">Submit</button>
+
+        </form>
+    </div>
+</div>

@@ -1,4 +1,9 @@
-<h1 class="mt-2 mb-3">Customers</h1>
+<div class="d-flex align-items-end">
+    <h1 class="flex-fill mt-2 mb-3">Customers</h1>
+    <a class="btn btn-primary mb-2" href="/new">
+        New customer <span class="fa fa-plus"></span>
+    </a>
+</div>
 
 <table class="table">
     <thead>
@@ -13,74 +18,58 @@
     </thead>
     <tbody>
         <tr *ngFor="let customer of customers; let i = index" class="d-flex flex-wrap"
-            [class.active]="i == currentIndex">
+            [class.active]="i == currentIndex" [attr.id]="'customer_' + customer.id">
 
             <td class="col-8 col-md-3 col-lg-3">{{customer.name}}</td>
             <td class="      col-md-2 col-lg-2  d-none d-md-table-cell">{{customer.cpf}}</td>
             <td class="      col-md-1 col-lg-1  d-none d-md-table-cell">{{customer.age}}</td>
             <td class="      col-md-4 col-lg-3  d-none d-md-table-cell">{{customer.email}}</td>
             <td class="               col-lg-2  d-none d-lg-table-cell">{{customer.phone}}</td>
-            <td class="col-4 col-md-2 col-lg-auto">
-                <!-- <button type="button" class="btn btn-primary fa fa-edit"
-                        (click)="editCustomer(customer)"></button> -->
+            <td class="col-4 col-md-2 col-lg-1">
                 <button type="button" class="btn btn-danger fa fa-trash"
                         (click)="deleteCustomer(customer)"></button>
                 <button type="button" class="btn btn-primary fa fa-chevron-down"
                         (click)="expandCustomer(customer, i)"></button>
             </td>
 
-            <div class="info" [attr.id]="'info_' + customer.id">
+            <div class="info">
+
                 <div class="w-100"></div>
 
                 <div>
-                    <p class="d-sm-none">
-                        <strong>CPF:</strong> {{customer.cpf}}
-                    </p>
-                    <p class="d-md-none">
-                        <strong>Age:</strong> {{customer.age}}
-                    </p>
-                    <p class="d-md-none">
-                        <strong>Email:</strong> {{customer.email}}
-                    </p>
-                    <p class="d-lg-none">
-                        <strong>Phone:</strong> {{customer.phone}}
-                    </p>
-                    <p>
-                        <strong>Endereço:</strong> {{customer.address}}
-                    </p>
+                    <p class="d-sm-none"><strong>CPF:</strong> {{customer.cpf}}</p>
+                    <p class="d-md-none"><strong>Age:</strong> {{customer.age}}</p>
+                    <p class="d-md-none"><strong>Email:</strong> {{customer.email}}</p>
+                    <p class="d-lg-none"><strong>Phone:</strong> {{customer.phone}}</p>
+                    <p><strong>Address:</strong> {{customer.address}}</p>
                 </div>
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">Dependentes:</h5>
 
-                        <div *ngFor="let dependent of customer.dependents;" class="card d-md-none">
-                            <div class="card-body">
-                                <span>Name: {{dependent.name}}</span><br />
-                                <span>CPF: {{dependent.cpf}}</span><br />
-                                <span>Relationship: {{dependent.relationship}}</span><br />
-                                <span>Age: {{dependent.age}}</span>
-                            </div>
+                <div class="mb-3">
+                    <h5>Dependents:</h5>
+
+                    <div *ngFor="let dependent of customer.dependents;" class="card flex-row"
+                         [attr.id]="'dep_' + dependent.id">
+
+                        <div class="card-body">
+                            <h6 class="card-title">{{dependent.name}}</h6>
+                            <span>CPF: {{dependent.cpf}}</span><br />
+                            <span>Relationship: {{dependent.relationship}}</span><br />
+                            <span>Age: {{dependent.age}}</span>
                         </div>
 
-                        <table class="d-none d-md-table">
-                            <thead>
-                                <tr>
-                                    <th>Name</th>
-                                    <th>CPF</th>
-                                    <th>Relationship</th>
-                                    <th>Age</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr *ngFor="let dependent of customer.dependents;">
-                                    <td>{{dependent.name}}</td>
-                                    <td>{{dependent.cpf}}</td>
-                                    <td>{{dependent.relationship}}</td>
-                                    <td>{{dependent.age}}</td>
-                                </tr>
-                            </tbody>
-                        </table>
+                        <button type="button" class="btn btn-danger fa fa-trash"
+                                (click)="deleteDependent(dependent)"></button>
                     </div>
+
+                    <div *ngIf="!customer.dependents || customer.dependents.length == 0">
+                        No dependents
+                    </div>
+                </div>
+
+                <div class="float-right">
+                    <button type="button" class="btn btn-primary" (click)="editCustomer(customer)">
+                        Edit customer <span class="fa fa-edit"></span>
+                    </button>
                 </div>
 
             </div>

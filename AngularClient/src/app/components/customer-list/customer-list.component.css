@@ -7,24 +7,6 @@ tr button ~ button {
     margin-left: 10px;
 }
 
-.btn-primary {
-    color: #fff;
-    background-color: #00a0a0;
-    border-color: #00a0a0;
-}
-
-.btn-primary:hover {
-    color: #fff;
-    background-color: #008080;
-    border-color: #008080;
-}
-
-.btn-primary:not(:disabled):not(.disabled):active {
-    color: #fff;
-    background-color: #006060;
-    border-color: #006060;
-}
-
 .active {
     color: white;
     background-color: #55b0b0;
@@ -42,8 +24,4 @@ tr button ~ button {
 
 .active .info {
     display: block;
-}
-
-.card ~ .card {
-    margin-top: 10px;
 }
