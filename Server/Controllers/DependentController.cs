@@ -1,9 +1,7 @@
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Server.Models;
+using Server.Services;
 
 namespace Server.Controllers
 {
@@ -11,25 +9,23 @@ namespace Server.Controllers
     [ApiController]
     public class DependentController : ControllerBase
     {
-        private readonly CustomerContext _context;
+        IDependentService _service;
 
-        public DependentController(CustomerContext context)
+        public DependentController(IDependentService service)
         {
-            _context = context;
+            _service = service;
         }
 
-        // DELETE: api/Dependent/5
         [HttpDelete("{id}")]
         public async Task<ActionResult<Dependent>> DeleteDependent(int id)
         {
-            var dependent = await _context.Dependents.FindAsync(id);
+            var dependent = await _service.GetDependentAsync(id);
             if (dependent == null)
             {
                 return NotFound();
             }
 
-            _context.Dependents.Remove(dependent);
-            await _context.SaveChangesAsync();
+            await _service.DeleteDependentAsync(id);
 
             return dependent;
         }

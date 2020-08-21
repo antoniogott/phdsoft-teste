@@ -1,9 +1,9 @@
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Server.Models;
+using Server.Services;
 
 namespace Server.Controllers
 {
@@ -11,30 +11,25 @@ namespace Server.Controllers
     [ApiController]
     public class CustomerController : ControllerBase
     {
-        private readonly CustomerContext _context;
+        ICustomerService _service;
 
-        public CustomerController(CustomerContext context)
+        public CustomerController(ICustomerService service)
         {
-            _context = context;
+            _service = service;
         }
 
         // GET: api/Customer
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Customer>>> GetCustomers()
         {
-            return await _context.Customers
-                .Include(c => c.Dependents)
-                .ToListAsync();
+            return Ok(await _service.GetAllAsync());
         }
 
         // GET: api/Customer/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Customer>> GetCustomer(int id)
         {
-            var customer = await _context.Customers
-                .Include(c => c.Dependents)
-                .FirstOrDefaultAsync(c => c.Id == id);
-
+            var customer = await _service.GetCustomerAsync(id);
             if (customer == null)
             {
                 return NotFound();
@@ -52,16 +47,13 @@ namespace Server.Controllers
                 return BadRequest();
             }
 
-            _context.Entry(customer).State = EntityState.Modified;
-            await UpdateDependents(customer);
-
             try
             {
-                await _context.SaveChangesAsync();
+                await _service.UpdateCustomer(id, customer);
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!CustomerExists(id))
+                if (await _service.GetCustomerAsync(id) == null)
                 {
                     return NotFound();
                 }
@@ -78,43 +70,23 @@ namespace Server.Controllers
         [HttpPost]
         public async Task<ActionResult<Customer>> PostCustomer(Customer customer)
         {
-            _context.Customers.Add(customer);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetCustomer", new { id = customer.Id }, customer);
+            var result = await _service.CreateCustomer(customer);
+            return CreatedAtAction("GetCustomer", new { id = result.Id }, result);
         }
 
         // DELETE: api/Customer/5
         [HttpDelete("{id}")]
         public async Task<ActionResult<Customer>> DeleteCustomer(int id)
         {
-            var customer = await _context.Customers.FindAsync(id);
+            var customer = await _service.GetCustomerAsync(id);
             if (customer == null)
             {
                 return NotFound();
             }
 
-            var currentDependents = _context.Dependents.Where(d => d.Customer == customer);
-            _context.Dependents.RemoveRange(currentDependents);
-
-            _context.Customers.Remove(customer);
-            await _context.SaveChangesAsync();
+            await _service.DeleteCustomerAsync(id);
 
             return customer;
-        }
-
-        private bool CustomerExists(int id)
-        {
-            return _context.Customers.Any(e => e.Id == id);
-        }
-
-        private async Task UpdateDependents(Customer customer)
-        {
-            var currentDependents = _context.Dependents.Where(d => d.Customer == customer);
-            _context.Dependents.RemoveRange(currentDependents);
-            await _context.SaveChangesAsync();
-
-            await _context.Dependents.AddRangeAsync(customer.Dependents);
         }
     }
 }
