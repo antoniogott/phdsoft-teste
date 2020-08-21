@@ -94,6 +94,9 @@ namespace Server.Controllers
                 return NotFound();
             }
 
+            var currentDependents = _context.Dependents.Where(d => d.Customer == customer);
+            _context.Dependents.RemoveRange(currentDependents);
+
             _context.Customers.Remove(customer);
             await _context.SaveChangesAsync();
 

@@ -5,8 +5,15 @@ namespace Server
 {
     public class CustomerContext : DbContext
     {
-        protected override void OnConfiguring(DbContextOptionsBuilder options)
-            => options.UseSqlite("Data Source=customers.db");
+        protected override void OnConfiguring(DbContextOptionsBuilder options) {
+            options.UseSqlite("Data Source=customers.db");
+        }
+        
+        protected override void OnModelCreating(ModelBuilder builder) {
+            builder
+                .Entity<Person>()
+                .HasAlternateKey(p => p.Cpf);
+        }
 
         public CustomerContext(DbContextOptions<CustomerContext> options) : base(options)
         {
