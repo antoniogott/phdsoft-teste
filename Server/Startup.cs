@@ -4,6 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.EntityFrameworkCore;
+using Server.Services;
 
 namespace Server
 {
@@ -30,6 +31,8 @@ namespace Server
                         builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
                     });
             });
+
+            services.AddScoped<ICustomerService, CustomerService>();
 
             services.AddControllers();
         }
